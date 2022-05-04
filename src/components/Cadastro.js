@@ -5,10 +5,12 @@ import styled from 'styled-components';
 
 import loadingContext from '../contexts/LoadingContext';
 
-export default function Login(){
+export default function Cadastro(){
 
+    const [name, setName] = useState("");
     const [email, setEmail] = useState("");
-    const [senha, setSenha] = useState("");
+    const [password, setPassword] = useState("");
+    const [passwordConfirm, setPasswordConfirm] = useState("");
 
     const { loading, setLoading } = useContext(loadingContext);
 
@@ -23,28 +25,29 @@ export default function Login(){
 
 
     return(
-        <PaginaLogin>
+        <PaginaCadastro>
             <StyledForm>
                 <h1>MyWallet</h1>
                 <form className='loginForm' onSubmit={loading?()=>{}:efetuarLogin}>
+                    <input type="text" placeholder='nome' id='nome' value={name} onChange={(e)=>setName(e.target.value)} disabled={loading}/>                    
                     <input type="email" placeholder='email'id='email' value={email} onChange={(e)=>setEmail(e.target.value)} disabled={loading}/>
-                    <input type="password" placeholder='senha' id='senha' value={senha} onChange={(e)=>setSenha(e.target.value)} disabled={loading}/>
+                    <input type="password" placeholder='senha' id='senha' value={password} onChange={(e)=>setPassword(e.target.value)} disabled={loading}/>
+                    <input type="password" placeholder='Confirme a senha' id='senhaConfirmar' value={passwordConfirm} onChange={(e)=>setPasswordConfirm(e.target.value)} disabled={loading}/>
                     {loading?
                         <ThreeDots type="ThreeDots" color="#FFFFFF" height={45} width={45}/>
                         :<input type="submit" value='Entrar' id='enviarLogin'/>
                     }
                 </form> 
                 
-                <Link to={`/cadastro`}>
-                   <h3>Primeira vez? Cadastre-se!</h3>
+                <Link to={`/`}>
+                   <h3>Já tem uma conta? Entre agora!</h3>
                 </Link>
             </StyledForm>
-        </PaginaLogin>
-
+        </PaginaCadastro>
     )
 }
 
-const PaginaLogin=styled.div`
+const PaginaCadastro=styled.div`
     box-sizing: border-box;
     background-color: #8C11BE;
     position: fixed;

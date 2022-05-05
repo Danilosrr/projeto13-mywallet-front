@@ -17,7 +17,7 @@ export default function Registros(){
                 <p>Não há registros de entrada ou saída</p>
             </BarraInterna>
             <BarraInferior>
-                <div className='registrarEntradaSaida'>
+                <button className='registrarEntradaSaida'>
                     <AddCircleOutline
                         className="registroIcon"
                         color={'#ffffff'} 
@@ -25,8 +25,8 @@ export default function Registros(){
                         width="20px"
                     />
                     <h3>Nova Entrada</h3>
-                </div>
-                <div className='registrarEntradaSaida'>
+                </button>
+                <button className='registrarEntradaSaida'>
                     <RemoveCircleOutline
                         className="registroIcon"
                         color={'#ffffff'} 
@@ -34,7 +34,7 @@ export default function Registros(){
                         width="20px"
                     />
                     <h3>Nova Entrada</h3>
-                </div>
+                </button>
             </BarraInferior>
         </PaginaRegistros>
     )
@@ -99,6 +99,7 @@ const BarraInferior=styled.div`
         justify-content: space-between;
         align-items: flex-start;
         background-color: #A328D6;
+        border: 1px solid #981DCA;
         border-radius: 5px;
         width: calc(50% - 10px);
         height: 100%;

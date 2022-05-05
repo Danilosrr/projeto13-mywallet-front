@@ -5,10 +5,10 @@ import styled from 'styled-components';
 
 import loadingContext from '../contexts/LoadingContext';
 
-export default function Login(){
+export default function NovaEntrada(props){
 
-    const [email, setEmail] = useState("");
-    const [senha, setSenha] = useState("");
+    const [value, setValue] = useState("");
+    const [description, setDescription] = useState("");
 
     const { loading, setLoading } = useContext(loadingContext);
 
@@ -22,39 +22,53 @@ export default function Login(){
     }
 
     return(
-        <PaginaLogin>
+        <PaginaNovaEntrada>
+            <BarraSuperior>
+                <h1>{(props.entrada)?'Nova entrada':'Nova saída'}</h1>
+            </BarraSuperior>
             <StyledForm>
-                <h1>MyWallet</h1>
                 <form className='loginForm' onSubmit={loading?()=>{}:efetuarLogin}>
-                    <input type="email" placeholder='email'id='email' value={email} onChange={(e)=>setEmail(e.target.value)} disabled={loading}/>
-                    <input type="password" placeholder='senha' id='senha' value={senha} onChange={(e)=>setSenha(e.target.value)} disabled={loading}/>
+                    <input type="number" placeholder='valor' id='valor' value={value} onChange={(e)=>setValue(e.target.value)} disabled={loading}/>                    
+                    <input type="text" placeholder='descrição'id='descrição' value={description} onChange={(e)=>setDescription(e.target.value)} disabled={loading}/>
                     {loading?
                         <button className='loadingButton'>
-                            <ThreeDots type="ThreeDots" color="#FFFFFF" height={45} width={45}/>    
+                            <ThreeDots type="ThreeDots" color="#FFFFFF" height={45} width={45}/>       
                         </button>
-                        :<input type="submit" value='Entrar' id='enviarLogin'/>
+                        :<input type="submit" value={props.entrada?'Salvar entrada':'Salvar saída'} id='enviarLogin'/>
                     }
                 </form> 
-                
-                <Link to={`/cadastro`}>
-                   <h3>Primeira vez? Cadastre-se!</h3>
-                </Link>
             </StyledForm>
-        </PaginaLogin>
-
+        </PaginaNovaEntrada>
     )
 }
 
-const PaginaLogin=styled.div`
+const PaginaNovaEntrada=styled.div`
     box-sizing: border-box;
     background-color: #8C11BE;
     position: fixed;
     top: 0;
     bottom: 0;
-    width: 100%;
+    left: 0;
+    right: 0;
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    flex-direction: column;
+    flex-wrap: no-wrap;
+    align-items: center;
+    gap: 14px;
+    
+    h1{
+        font-family: 'Raleway', sans-serif;
+        font-size: 26px;
+        font-weight: 700;
+        color: #FFFFFF;
+    }
+`
+const BarraSuperior=styled.div`
+    box-sizing: border-box;
+    height: 15%;
+    width: calc(100% - 56px);
+    display: flex;
+    justify-content: space-between;
     align-items: center;
 `
 const StyledForm=styled.div`
@@ -64,7 +78,7 @@ const StyledForm=styled.div`
     align-items: center;
     text-align: center;
     flex-direction: column;
-
+    
     h1{
         font-family: 'Saira Stencil One', cursive;
         font-size: 32px;

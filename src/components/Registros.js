@@ -1,20 +1,55 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import axios from 'axios';
 
 import logoutIcon from "../../src/assets/images/LogoutImage.svg";
 import { AddCircleOutline } from 'react-ionicons'
 import { RemoveCircleOutline } from 'react-ionicons'
 
+import UserContext from '../contexts/UserContext';
+import LoadingContext from '../contexts/LoadingContext';
+
 export default function Registros(){
+    const { token, setToken, transactions, setTransactions, setUser, user } = useContext(UserContext);
+    const { loading } = useContext(LoadingContext)
+
+    const navigate = useNavigate();
+
+    useEffect(()=>{
+
+        if (!token) {
+            setUser(null);
+            setTransactions([]);
+            navigate("/");
+        }else{
+            const userToken = {
+                headers: { Authorization: `Bearer ${token}` }
+            };
+
+            const promise = axios.get(
+                "https://danilo-mywallet-api.herokuapp.com/balance",
+                userToken
+            );
+            promise.then(response => {
+                console.log(response);
+                setTransactions(response.data);
+            });
+            promise.catch(error => 
+                console.log(error.response)
+            );    
+        }
+    }, [token,loading]);
+
     return(
         <PaginaRegistros>
             <BarraSuperior>
-                <h1>Olá, Fulano</h1>
+                <h1>Olá, {user}</h1>
                 <img src={logoutIcon}alt='logout icon'/>    
             </BarraSuperior>
             <BarraInterna>
                 <p>Não há registros de entrada ou saída</p>
+                {transactions.map(transaction=><h1>uma operação</h1>)}
             </BarraInterna>
             <BarraInferior>
                 <button className='registrarEntradaSaida'>

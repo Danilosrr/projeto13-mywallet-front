@@ -1,25 +1,46 @@
 import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import { ThreeDots } from "react-loader-spinner";
 import styled from 'styled-components';
 
-import loadingContext from '../contexts/LoadingContext';
+import LoadingContext from '../contexts/LoadingContext';
+import UserContext from '../contexts/UserContext';
 
 export default function Login(){
 
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
 
-    const { loading, setLoading } = useContext(loadingContext);
+    const { loading, setLoading } = useContext(LoadingContext);
+    const { token, setToken,setUser } = useContext(UserContext);
+
 
     const navigate = useNavigate();
 
     function efetuarLogin(event){
         event.preventDefault();
-
         setLoading(true);
-        setTimeout(()=>{setLoading(false)},3000);
-    }
+        
+        const promise = axios.post(
+            "https://danilo-mywallet-api.herokuapp.com/login",
+             {
+                email: email,
+                password: senha
+            }
+        );
+        promise.then((response)=>{
+            setToken(response.data.token);
+            localStorage.setItem('myWalletToken', JSON.stringify(response.data.token));
+            setUser(response.data.username);
+            setLoading(false);
+            navigate("/registros");    
+        });
+        promise.catch((error)=>{
+            console.log(error.response)
+            setLoading(false);
+        });    
+    };
 
     return(
         <PaginaLogin>

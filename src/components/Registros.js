@@ -18,13 +18,12 @@ export default function Registros(){
 
     useEffect(()=>{
 
-        if (!token) {
-            setUser(null);
-            setTransactions([]);
-            navigate("/");
-        }else{
+        if (JSON.parse(localStorage.getItem('myWalletToken'))) {
+            setToken(JSON.parse(localStorage.getItem('myWalletToken')));
+            console.log(token,"local token:",JSON.parse(localStorage.getItem('myWalletToken')));
+
             const userToken = {
-                headers: { Authorization: `Bearer ${token}` }
+                headers: { Authorization: `Bearer ${token || JSON.parse(localStorage.getItem('myWalletToken'))}` }
             };
 
             const promise = axios.get(
@@ -38,14 +37,26 @@ export default function Registros(){
             promise.catch(error => 
                 console.log(error.response)
             );    
+            console.log(promise)
+        }else{
+            setUser(null);
+            setTransactions([]);
+            navigate("/");
         }
     }, [token,loading]);
+
+    function logOut(){
+        setUser(null);
+        setTransactions([]);
+        localStorage.removeItem('myWalletToken');
+        navigate("/");
+    };
 
     return(
         <PaginaRegistros>
             <BarraSuperior>
                 <h1>Olá, {user}</h1>
-                <img src={logoutIcon}alt='logout icon'/>    
+                <img src={logoutIcon} alt='logout icon' onClick={logOut}/>    
             </BarraSuperior>
             <BarraInterna>
                 <p>Não há registros de entrada ou saída</p>

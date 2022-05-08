@@ -1,5 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+
 import { ThreeDots } from "react-loader-spinner";
 import styled from 'styled-components';
 
@@ -16,19 +18,35 @@ export default function Cadastro(){
 
     const navigate = useNavigate();
 
-    function efetuarLogin(event){
+    function efetuarCadastro(event){
         event.preventDefault();
-
         setLoading(true);
-        setTimeout(()=>{setLoading(false)},3000);
-    }
 
+        const promise = axios.post(
+            "https://danilo-mywallet-api.herokuapp.com/register",
+             {
+                username: name,
+                email: email,
+                password: password,
+                passwordConfirm: passwordConfirm
+            }
+        );
+        promise.then((response)=>{
+            console.log(response.data);
+            setLoading(false);
+            navigate("/");    
+        });
+        promise.catch((error)=>{
+            console.log(error.response.data);
+            setLoading(false);
+        });
+    }
 
     return(
         <PaginaCadastro>
             <StyledForm>
                 <h1>MyWallet</h1>
-                <form className='loginForm' onSubmit={loading?()=>{}:efetuarLogin}>
+                <form className='loginForm' onSubmit={loading?()=>{}:efetuarCadastro}>
                     <input type="text" placeholder='nome' id='nome' value={name} onChange={(e)=>setName(e.target.value)} disabled={loading}/>                    
                     <input type="email" placeholder='email'id='email' value={email} onChange={(e)=>setEmail(e.target.value)} disabled={loading}/>
                     <input type="password" placeholder='senha' id='senha' value={password} onChange={(e)=>setPassword(e.target.value)} disabled={loading}/>

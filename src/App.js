@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import LoadingContext from "./contexts/LoadingContext";
 import UserContext from "./contexts/UserContext";
@@ -13,11 +13,18 @@ import "./assets/css/reset.css";
 import "./assets/css/fonts.css";
 
 export default function App(){
-
-    const [loading,setLoading] = useState(false)
+    const [loading,setLoading] = useState(false);
     const [user, setUser] = useState(null);
     const [token, setToken] = useState(null);
     const [transactions,setTransactions] = useState([]);
+
+    useEffect(()=>{
+        try {
+            const localToken=JSON.parse(localStorage.getItem('myWalletToken'))
+            setToken(localToken);
+        } catch (error) {
+        };
+    }, [])
 
     return(
         <UserContext.Provider value={{user, setUser, token, setToken, transactions, setTransactions}}>

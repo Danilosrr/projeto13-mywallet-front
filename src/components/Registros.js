@@ -1,7 +1,8 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useContext, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
+import { ThreeDots } from "react-loader-spinner";
 
 import logoutIcon from "../../src/assets/images/LogoutImage.svg";
 import { AddCircleOutline } from 'react-ionicons'
@@ -10,14 +11,17 @@ import { RemoveCircleOutline } from 'react-ionicons'
 import UserContext from '../contexts/UserContext';
 import LoadingContext from '../contexts/LoadingContext';
 
+import Operacao from './../components/Operacao.js';
+import Saldo from './../components/Saldo.js';
+
 export default function Registros(){
     const { token, setToken, transactions, setTransactions, setUser, user } = useContext(UserContext);
-    const { loading } = useContext(LoadingContext)
+    const { loading, setLoading } = useContext(LoadingContext);
 
     const navigate = useNavigate();
 
-    useEffect(()=>{
-
+    useEffect(()=>{  
+        setLoading(true);      
         if (JSON.parse(localStorage.getItem('myWalletToken'))) {
             setToken(JSON.parse(localStorage.getItem('myWalletToken')));
             console.log(token,"local token:",JSON.parse(localStorage.getItem('myWalletToken')));
@@ -25,25 +29,25 @@ export default function Registros(){
             const userToken = {
                 headers: { Authorization: `Bearer ${token || JSON.parse(localStorage.getItem('myWalletToken'))}` }
             };
-
             const promise = axios.get(
                 "https://danilo-mywallet-api.herokuapp.com/balance",
                 userToken
             );
             promise.then(response => {
-                console.log(response);
                 setTransactions(response.data);
+                console.log(transactions);
+                setLoading(false);      
             });
-            promise.catch(error => 
-                console.log(error.response)
-            );    
-            console.log(promise)
+            promise.catch(error => {
+                console.log(error.response);
+                setLoading(false);      
+            });    
         }else{
             setUser(null);
             setTransactions([]);
             navigate("/");
         }
-    }, [token,loading]);
+    }, [token,setTransactions]);
 
     function logOut(){
         setUser(null);
@@ -55,15 +59,17 @@ export default function Registros(){
     return(
         <PaginaRegistros>
             <BarraSuperior>
-                <h1>Olá, {user}</h1>
+                <h1>{user===null?`Bem vindo(a) devolta!`:`Olá, ${user}!`}</h1>
                 <img src={logoutIcon} alt='logout icon' onClick={logOut}/>    
             </BarraSuperior>
             <BarraInterna>
-                <p>Não há registros de entrada ou saída</p>
-                {transactions.map(transaction=><h1>uma operação</h1>)}
+                {loading?<p>Não há registros de entrada ou saída</p>:
+                        transactions.map(opr=><Operacao key={opr._id} data ={opr.date} descricao={opr.description} valor={opr.value} tipo={opr.type}/>)
+                }
+                <Saldo transacoes={transactions}/>
             </BarraInterna>
             <BarraInferior>
-                <button className='registrarEntradaSaida'>
+                <button className='registrarEntradaSaida' onClick={loading?()=>{}:()=>navigate("/entrada")}>
                     <AddCircleOutline
                         className="registroIcon"
                         color={'#ffffff'} 
@@ -72,14 +78,14 @@ export default function Registros(){
                     />
                     <h3>Nova Entrada</h3>
                 </button>
-                <button className='registrarEntradaSaida'>
+                <button className='registrarEntradaSaida' onClick={loading?()=>{}:()=>navigate("/saida")}>
                     <RemoveCircleOutline
                         className="registroIcon"
                         color={'#ffffff'} 
                         height="20px"
                         width="20px"
                     />
-                    <h3>Nova Entrada</h3>
+                    <h3>Nova Saída</h3>
                 </button>
             </BarraInferior>
         </PaginaRegistros>
@@ -117,17 +123,20 @@ const BarraSuperior=styled.div`
 `
 const BarraInterna=styled.div`
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column;
+    justify-content: flex-start;
+    flex-wrap: wrap;
     width: calc(100% - 56px);
     height: 70%;
     background-color: #FFFFFF;
     border: 1px solid #981DCA;
     border-radius: 5px;
-
-    p{
+    
+    p{  
+        position: relative;
+        top: 50%;
+        align-self: center;
         font-family: 'Raleway', sans-serif;
-        margin: 10px 0px;
         color: #868686;
     }
 `

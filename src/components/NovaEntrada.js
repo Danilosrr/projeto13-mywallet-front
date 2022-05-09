@@ -1,9 +1,12 @@
 import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+
 import { ThreeDots } from "react-loader-spinner";
 import styled from 'styled-components';
 
 import loadingContext from '../contexts/LoadingContext';
+import UserContext from '../contexts/UserContext';
 
 export default function NovaEntrada(props){
 
@@ -11,15 +14,42 @@ export default function NovaEntrada(props){
     const [description, setDescription] = useState("");
 
     const { loading, setLoading } = useContext(loadingContext);
+    const { token } = useContext(UserContext);
 
     const navigate = useNavigate();
 
-    function efetuarLogin(event){
+    function efetuarEntrada(event){
         event.preventDefault();
-
         setLoading(true);
-        setTimeout(()=>{setLoading(false)},3000);
-    }
+
+        const userToken = {
+            headers: { Authorization: `Bearer ${token || JSON.parse(localStorage.getItem('myWalletToken'))}` }
+        };
+
+        let operationType;
+        if(props.entrada){operationType='credit'}else{operationType='debt'};
+        
+        let entry = {
+            description: description,
+            value: value,
+            type: operationType
+        };
+
+        const promise = axios.post(
+            "https://danilo-mywallet-api.herokuapp.com/balance",
+            entry,
+            userToken
+        );
+        promise.then(response => {
+            console.log(response);
+            setLoading(false);
+            navigate("/registros");
+        });
+        promise.catch(error => {
+            alert("utilize valores com até duas casa decimais separadas por vírgula");
+            setLoading(false);    
+        });
+    };
 
     return(
         <PaginaNovaEntrada>
@@ -27,8 +57,8 @@ export default function NovaEntrada(props){
                 <h1>{(props.entrada)?'Nova entrada':'Nova saída'}</h1>
             </BarraSuperior>
             <StyledForm>
-                <form className='loginForm' onSubmit={loading?()=>{}:efetuarLogin}>
-                    <input type="number" placeholder='valor' id='valor' value={value} onChange={(e)=>setValue(e.target.value)} disabled={loading}/>                    
+                <form className='loginForm' onSubmit={loading?()=>{}:efetuarEntrada}>
+                    <input placeholder='valor' id='valor' value={value} onChange={(e)=>setValue(e.target.value)} disabled={loading}/>                    
                     <input type="text" placeholder='descrição'id='descrição' value={description} onChange={(e)=>setDescription(e.target.value)} disabled={loading}/>
                     {loading?
                         <button className='loadingButton'>

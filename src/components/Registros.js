@@ -134,9 +134,15 @@ const BarraInterna=styled.div`
     border: 1px solid #981DCA;
     border-radius: 5px;
 
+    .operationsList::-webkit-scrollbar {
+        display: none;
+    }
+
     .operationsList{
         width: 100%;
         overflow-y: scroll;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
     }
     p{  
         width: 100%;

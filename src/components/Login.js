@@ -13,8 +13,7 @@ export default function Login(){
     const [senha, setSenha] = useState("");
 
     const { loading, setLoading } = useContext(LoadingContext);
-    const { token, setToken,setUser } = useContext(UserContext);
-
+    const { setToken,setUser } = useContext(UserContext);
 
     const navigate = useNavigate();
 

@@ -7,10 +7,10 @@ export default function Saldo(props){
     function calcSaldo(arr,credito){    
         let saldo=0;
         arr.map(op => {
-            if(op.type=='credit'){
-                saldo += parseFloat((op.value).replace(',', '.'));
+            if(op.type==='credit'){
+                return saldo += parseFloat((op.value).replace(',', '.'));
             }else{
-                saldo -= parseFloat((op.value).replace(',', '.'));
+                return saldo -= parseFloat((op.value).replace(',', '.'));
             }
         });
         if (saldo>0){credito=true}else{credito=false};

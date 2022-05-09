@@ -26,11 +26,14 @@ export default function Saldo(props){
 }
 
 const BarraSaldo = styled.div`
+    background-color: #FFFFFF;
+    position: sticky;
+    bottom: 0;
     display: flex;
     justify-content: space-between;
     width:100%;
-    margin: auto 0 0 0;
     font-family: 'Raleway', sans-serif;
+    padding-top: 5px;
 
     h2{
         font-weight: 700;

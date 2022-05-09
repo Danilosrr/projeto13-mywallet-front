@@ -16,6 +16,7 @@ const ComponenteOperacao=styled.div`
     width: 100%;
     margin: 12px 0 0 0;
     h5{
+        color: #C6C6C6;
         margin: 0 15px 0 12px;
     }
     h3{

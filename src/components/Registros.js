@@ -122,16 +122,17 @@ const BarraSuperior=styled.div`
     align-items: center;
 `
 const BarraInterna=styled.div`
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    flex-wrap: wrap;
+    flex-wrap: no-wrap;
     width: calc(100% - 56px);
     height: 70%;
     background-color: #FFFFFF;
     border: 1px solid #981DCA;
     border-radius: 5px;
-    
+    overflow-y: scroll;
     p{  
         position: relative;
         top: 50%;

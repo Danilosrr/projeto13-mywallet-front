@@ -4,8 +4,8 @@ import styled from 'styled-components';
 import axios from 'axios';
 
 import logoutIcon from "../../src/assets/images/LogoutImage.svg";
-import { AddCircleOutline } from 'react-ionicons'
-import { RemoveCircleOutline } from 'react-ionicons'
+import { AddCircleOutline } from 'react-ionicons';
+import { RemoveCircleOutline } from 'react-ionicons';
 
 import UserContext from '../contexts/UserContext';
 import LoadingContext from '../contexts/LoadingContext';
@@ -20,8 +20,8 @@ export default function Registros(){
     const navigate = useNavigate();
 
     useEffect(()=>{  
-        setLoading(true);      
         if (JSON.parse(localStorage.getItem('myWalletToken'))) {
+            setLoading(true);      
             setToken(JSON.parse(localStorage.getItem('myWalletToken')));
             console.log(token,"local token:",JSON.parse(localStorage.getItem('myWalletToken')));
 
@@ -62,10 +62,12 @@ export default function Registros(){
                 <img src={logoutIcon} alt='logout icon' onClick={logOut}/>    
             </BarraSuperior>
             <BarraInterna>
-                {loading?<p>Não há registros de entrada ou saída</p>:
-                        transactions.map(opr=><Operacao key={opr._id} data ={opr.date} descricao={opr.description} valor={opr.value} tipo={opr.type}/>)
-                }
-                <Saldo transacoes={transactions}/>
+                <div className='operationsList'>
+                    {transactions.length<1?<p>Não há registros de entrada ou saída</p>:
+                            transactions.map(opr=><Operacao key={opr._id} data ={opr.date} descricao={opr.description} valor={opr.value} tipo={opr.type}/>)
+                    }
+                </div>
+                {transactions.length<1?<></>:<Saldo transacoes={transactions}/>}
             </BarraInterna>
             <BarraInferior>
                 <button className='registrarEntradaSaida' onClick={loading?()=>{}:()=>navigate("/entrada")}>
@@ -131,11 +133,16 @@ const BarraInterna=styled.div`
     background-color: #FFFFFF;
     border: 1px solid #981DCA;
     border-radius: 5px;
-    overflow-y: scroll;
+
+    .operationsList{
+        width: 100%;
+        overflow-y: scroll;
+    }
     p{  
-        position: relative;
+        width: 100%;
+        position: absolute;
         top: 50%;
-        align-self: center;
+        text-align: center;
         font-family: 'Raleway', sans-serif;
         color: #868686;
     }

@@ -2,6 +2,8 @@
 
 An easy to use financial manager. Track your revenues and expenses to learn how you spend your money and know all the time how much you have.
 
+<img src="https://github.com/Danilosrr/projeto13-mywallet-front/blob/main/src/assets/images/myWalletApp.png">
+
 Try it out now at http://projeto13-mywallet-front-drab.vercel.app/
 
 ## About
